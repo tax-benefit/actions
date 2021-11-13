@@ -37,15 +37,7 @@ jobs:
           REF: ${{ toJSON(inputs.ref) }}
           REF_TYPE: ${{ toJSON(inputs.ref_type) }}
           REPOSITORY: ${{ toJSON(inputs.repository) }}
-          TOKEN: ${{ toJSON(inputs.token) }}
-        run: env
-      - env:
-          EVENT_NAME: ${{ toJSON(inputs.event_name) }}
-          PARAMETERS_PATH: ${{ toJSON(inputs.parameters_path) }}
-          REF: ${{ toJSON(inputs.ref) }}
-          REF_TYPE: ${{ toJSON(inputs.ref_type) }}
-          REPOSITORY: ${{ toJSON(inputs.repository) }}
-          TOKEN: ${{ toJSON(inputs.token) }}
+          TOKEN: ${{ toJSON(secrets.token) }}
         run: |
           curlf() {
             # See https://superuser.com/questions/590099/can-i-make-curl-fail-with-an-exitcode-different-than-0-if-the-http-status-code-i
