@@ -16,11 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - env:
-          EVENT_NAME: ${{ github.event_name }}
           PARAMETERS_PATH: ${{ toJSON(inputs.parameters_path) }}
-          REF: ${{ toJSON(github.ref) }}
-          REF_TYPE: ${{ toJSON(github.ref_type) }}
-          REPOSITORY: ${{ toJSON(github.repository) }}
           TOKEN: ${{ toJSON(secrets.token) }}
         run: |
           curlf() {
@@ -34,4 +30,4 @@ jobs:
             cat $OUTPUT_FILE
             rm $OUTPUT_FILE
           }
-          env | curlf --data-binary @- --header "Content-Type: text/plain; charset=utf-8" --max-time 300 https://control-center.tax-benefit.org/github/validate_yaml.json
+          env | curlf --data-binary @- --header "Content-Type: text/plain; charset=utf-8" --max-time 300 https://control-center.tax-benefit.org/github/action.json
