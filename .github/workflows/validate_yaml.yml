@@ -1,4 +1,4 @@
-name: Validate raw unprocessed parameters of an OpenFisca-based tax-benefit system
+name: Validate YAML parameters of an OpenFisca-based tax-benefit system
 on:
   workflow_call:
     inputs:
@@ -28,7 +28,7 @@ on:
         required: true
 jobs:
   validate:
-    name: Call Tax-Benefit validator of raw unprocessed YAML parameters
+    name: Call Tax-Benefit YAML validator
     runs-on: ubuntu-latest
     steps:
       - env:
@@ -58,4 +58,4 @@ jobs:
             cat $OUTPUT_FILE
             rm $OUTPUT_FILE
           }
-          env | curlf --data-binary @- --header "Content-Type: text/plain; charset=utf-8" --max-time 300 https://control-center.tax-benefit.org/github/validate_raw_unprocessed_parameters.json
+          env | curlf --data-binary @- --header "Content-Type: text/plain; charset=utf-8" --max-time 300 https://control-center.tax-benefit.org/github/validate_yaml.json
