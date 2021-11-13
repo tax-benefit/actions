@@ -1,0 +1,38 @@
+name: Validate raw unprocessed parameters of an OpenFisca-based tax-benefit system
+on:
+  workflow_call:
+    inputs:
+      event_name:
+        description: 'name of event that triggered the workflow (GITHUB_EVENT_NAME)'
+        required: true
+        type: string
+      parameters_path:
+        description: 'path of parameters in repository (eg "openfisca_france/parameters")'
+        required: true
+        type: string
+      ref:
+        description: 'branch or tag ref that triggered the workflow (GITHUB_REF)'
+        required: false
+        type: string
+      ref_type:
+        description: 'type of ref that triggered the workflow (either "branch" or "tag") (GITHUB_REF_TYPE)'
+        required: false
+        type: string
+      repository:
+        description: 'owner and repository name. For example, "octocat/Hello-World" (GITHUB_REPOSITORY)'
+        required: true
+        type: string
+    secrets:
+      token:
+        description: 'Secret token needed to access Tax-Benefit control-center'
+        required: true
+        type: string
+    steps:
+      - env:
+          EVENT_NAME: ${{ toJSON(inputs.event_name) }}
+          PARAMETERS_PATH: ${{ toJSON(inputs.parameters_path) }}
+          REF: ${{ toJSON(inputs.ref) }}
+          REF_TYPE: ${{ toJSON(inputs.ref_type) }}
+          REPOSITORY: ${{ toJSON(inputs.repository) }}
+          TOKEN: ${{ toJSON(inputs.token) }}
+        run: env
