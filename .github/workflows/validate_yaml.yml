@@ -16,8 +16,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - env:
+          CONTROL_CENTER_TOKEN: ${{ toJSON(secrets.token) }}
           PARAMETERS_PATH: ${{ toJSON(inputs.parameters_path) }}
-          TOKEN: ${{ toJSON(secrets.token) }}
         run: |
           curlf() {
             # See https://superuser.com/questions/590099/can-i-make-curl-fail-with-an-exitcode-different-than-0-if-the-http-status-code-i
