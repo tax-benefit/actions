@@ -26,7 +26,10 @@ on:
       token:
         description: 'Secret token needed to access Tax-Benefit control-center'
         required: true
-        type: string
+jobs:
+  validate:
+    name: Call Tax-Benefit validator of raw unprocessed YAML parameters
+    runs-on: ubuntu-latest
     steps:
       - env:
           EVENT_NAME: ${{ toJSON(inputs.event_name) }}
@@ -36,3 +39,23 @@ on:
           REPOSITORY: ${{ toJSON(inputs.repository) }}
           TOKEN: ${{ toJSON(inputs.token) }}
         run: env
+      - env:
+          EVENT_NAME: ${{ toJSON(inputs.event_name) }}
+          PARAMETERS_PATH: ${{ toJSON(inputs.parameters_path) }}
+          REF: ${{ toJSON(inputs.ref) }}
+          REF_TYPE: ${{ toJSON(inputs.ref_type) }}
+          REPOSITORY: ${{ toJSON(inputs.repository) }}
+          TOKEN: ${{ toJSON(inputs.token) }}
+        run: |
+          curlf() {
+            # See https://superuser.com/questions/590099/can-i-make-curl-fail-with-an-exitcode-different-than-0-if-the-http-status-code-i
+            OUTPUT_FILE=$(mktemp)
+            HTTP_CODE=$(curl --silent --output $OUTPUT_FILE --write-out "%{http_code}" "$@")
+            if [[ ${HTTP_CODE} -lt 200 || ${HTTP_CODE} -gt 299 ]] ; then
+              >&2 cat $OUTPUT_FILE
+              return 22
+            fi
+            cat $OUTPUT_FILE
+            rm $OUTPUT_FILE
+          }
+          env | curlf --data-binary @- --header "Content-Type: text/plain; charset=utf-8" --max-time 300 https://control-center.tax-benefit.org/github/validate_raw_unprocessed_parameters.json
