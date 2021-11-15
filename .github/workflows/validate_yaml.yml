@@ -30,4 +30,4 @@ jobs:
             cat $OUTPUT_FILE
             rm $OUTPUT_FILE
           }
-          env | curlf --data-binary @- --header "Content-Type: text/plain; charset=utf-8" --max-time 300 https://control-center.tax-benefit.org/github/validate_yaml.json
+          env | curlf --data-binary @- --header "Content-Type: text/plain; charset=utf-8" --max-time 300 https://control-center.tax-benefit.org/api/github/validate_yaml
