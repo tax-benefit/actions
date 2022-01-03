@@ -6,7 +6,7 @@ on:
         description: 'Secret token needed to access Tax-Benefit control-center'
         required: true
 jobs:
-  tax-benefit_ci+cd:
+  deploy:
     name: Call tax-benefit.org continuous integration & deployment
     runs-on: ubuntu-latest
     steps:
