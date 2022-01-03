@@ -1,0 +1,28 @@
+name: Build, test & deploy an OpenFisca-based tax & benefit system to tax-benefit.org
+on:
+  workflow_call:
+    secrets:
+      token:
+        description: 'Secret token needed to access Tax-Benefit control-center'
+        required: true
+jobs:
+  tax-benefit_ci+cd:
+    name: Call tax-benefit.org continuous integration & deployment
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          CONTROL_CENTER_TOKEN: ${{ toJSON(secrets.token) }}
+          DEFAULT_BRANCH: ${{ toJSON(github.event.repository.default_branch) }}
+        run: |
+          curlf() {
+            # See https://superuser.com/questions/590099/can-i-make-curl-fail-with-an-exitcode-different-than-0-if-the-http-status-code-i
+            OUTPUT_FILE=$(mktemp)
+            HTTP_CODE=$(curl --silent --output $OUTPUT_FILE --write-out "%{http_code}" "$@")
+            if [[ ${HTTP_CODE} -lt 200 || ${HTTP_CODE} -gt 299 ]] ; then
+              >&2 cat $OUTPUT_FILE
+              return 22
+            fi
+            cat $OUTPUT_FILE
+            rm $OUTPUT_FILE
+          }
+          env | curlf --data-binary @- --header "Content-Type: text/plain; charset=utf-8" --max-time 300 https://control-center.tax-benefit.org/api/github/action
