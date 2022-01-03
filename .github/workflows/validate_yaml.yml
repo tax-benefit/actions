@@ -1,4 +1,4 @@
-name: Validate the YAML parameters of an OpenFisca-based tax-benefit system
+name: Validate the YAML parameters of an OpenFisca-based tax & benefit system
 on:
   workflow_call:
     inputs:
