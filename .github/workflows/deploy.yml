@@ -1,6 +1,11 @@
 name: Build, test & deploy an OpenFisca-based tax & benefit system to tax-benefit.org
 on:
   workflow_call:
+    inputs:
+      python_package:
+        description: 'name of OpenFisca python package to deploy (eg "openfisca_france")'
+        required: true
+        type: string
     secrets:
       token:
         description: 'Secret token needed to access Tax-Benefit control-center'
@@ -13,6 +18,7 @@ jobs:
       - env:
           CONTROL_CENTER_TOKEN: ${{ toJSON(secrets.token) }}
           DEFAULT_BRANCH: ${{ toJSON(github.event.repository.default_branch) }}
+          PYTHON_PACKAGE: ${{ toJSON(inputs.python_package) }}
         run: |
           curlf() {
             # See https://superuser.com/questions/590099/can-i-make-curl-fail-with-an-exitcode-different-than-0-if-the-http-status-code-i
